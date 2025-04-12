@@ -6,6 +6,6 @@
 5) (nazwa_venv): `cd personal_blog`
 6) (nazwa_venv): `python manage.py runserver`
 <hr>
-Strona jest pod adresem: http://127.0.0.1:8000.
-a admin-panel: http://127.0.0.1:8000/admin/
-<s>login i hasło to admin</s>
+Strona jest pod adresem: http://127.0.0.1:8000  
+a admin-panel: http://127.0.0.1:8000/admin/  
+<i>login i hasło to admin</i>
