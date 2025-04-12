@@ -1,6 +1,7 @@
 1) `python -m venv nazwa_venv`
 2) Linux: `source nazwa_venv/bin/activate`
-2) Win : `./venv/Scripts/Activate.ps` ( należy zmienić ustawienia powershell'a, aby akceptował wywoływanie skryptów za pom. komend )
+2) Win : `.\venv\Scripts\Activate.ps1` ( należy zmienić ustawienia powershell'a, aby akceptował wywoływanie skryptów za pom. komend )
+2) Tymczasowa zmiana polityki PowerShella: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process`
 3) (nazwa_venv): `pip install -r requirements.txt`
 4) (nazwa_venv): `pip install --upgrade pip`
 5) (nazwa_venv): `cd personal_blog`
