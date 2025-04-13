@@ -44,3 +44,6 @@ def blog_detail(request, pk):
         "form": CommentForm(),
     }
     return render(request, "blog/detail.html", context)
+
+def account_settings(request):
+    return render(request, 'konto/account_settings.html')

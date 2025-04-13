@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    <h2>Ustawienia konta</h2>
+{% endblock %}
+
+{% block page_content %}
+    <p><strong>Login:</strong> {{ user.username }}</p>
+    <p><strong>Wyświetlana nazwa:</strong> {{ user.profile.display_name }}</p>
+    <p><strong>Imię:</strong> {{ user.first_name }}</p>
+    <p><strong>Nazwisko:</strong> {{ user.last_name }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Data urodzenia:</strong> {{ user.profile.date_of_birth }}</p>
+
+    <a href="{% url 'edit_profile' %}">Edytuj profil</a><br><br>
+
+    <a href="{% url 'password_change' %}">Zmień hasło</a><br>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Wyloguj się</button>
+    </form>
+{% endblock %}

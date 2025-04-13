@@ -1,16 +1,14 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.forms import DateInput
+from .models import Profile
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
     email = forms.EmailField(required=True)
-    date_of_birth = forms.DateField(
-        required=True,
-        widget=DateInput(attrs={'type': 'date'})
-    )
+    date_of_birth = forms.DateField(required=True, widget=DateInput(attrs={'type': 'date'}))
 
     class Meta:
         model = User
@@ -24,3 +22,9 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['display_name', 'date_of_birth']
+
