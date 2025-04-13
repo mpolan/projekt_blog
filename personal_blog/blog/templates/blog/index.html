@@ -1,6 +1,25 @@
 <!-- blog/templates/blog/index.html -->
 {% extends "base.html" %}
 
+{%block login_signup_content %}
+
+{% if user.is_authenticated %}
+Witaj {{user.username}} !
+<p><a href="{% url 'password_change' %}">Password Change</a></p>
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Log Out</button>
+  </form>
+
+{% else %}
+<p><a href="{% url 'password_reset' %}">Password Reset</a></p>
+<p>Nie jestes zalogowany</p>
+<a href="{% url 'login' %}">Zaloguj Sie</a><br>
+<a href="{% url 'signup' %}">Zarejestruj Sie</a>
+{% endif %}
+
+{%endblock login_signup_content %}
+
 {% block page_title %}
     <h2>Blog Posts</h2>
 {% endblock page_title %}
