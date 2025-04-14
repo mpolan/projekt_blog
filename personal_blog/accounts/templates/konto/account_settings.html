@@ -12,6 +12,10 @@
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>Data urodzenia:</strong> {{ user.profile.date_of_birth }}</p>
 
+    {% if user.profile.get_age %}
+        <p><strong>Wiek:</strong> {{ user.profile.get_age }} lat</p>
+    {% endif %}
+
     <a href="{% url 'edit_profile' %}">Edytuj profil</a><br><br>
 
     <a href="{% url 'password_change' %}">Zmień hasło</a><br>
