@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 VISIBILITY_CHOICES = (
     ('public', 'Publiczny'),
-    ('private', 'Prywatny (chroniony hasłem)'),
+    ('private', 'Tylko dla mnie'),
 )
 
 class Category(models.Model):

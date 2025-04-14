@@ -4,10 +4,16 @@ from blog.models import Post, Comment
 from blog.forms import CommentForm
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
-
+from django.db import models
 
 def blog_index(request):
-    posts = Post.objects.all().order_by("-created_on")
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(
+            models.Q(visibility='public') | models.Q(author=request.user)
+        ).order_by("-created_on")
+    else:
+        posts = Post.objects.filter(visibility='public').order_by("-created_on")
+
     context = {
         "posts": posts,
     }
@@ -27,7 +33,9 @@ def blog_category(request, category):
 
 def blog_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-
+    # Jeśli post jest prywatny i użytkownik to nie autor → błąd 403
+    if post.visibility == 'private' and post.author != request.user:
+        return render(request, "blog/private_forbidden.html", status=403)
     # Klucz sesji zależny od użytkownika
     if request.user.is_authenticated:
         session_key = f"user_{request.user.id}_unlocked_post_{post.pk}"
