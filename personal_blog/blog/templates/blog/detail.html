@@ -18,6 +18,14 @@
     <p><strong>Autor:</strong> {{ post.author.profile.display_name|default:post.author.first_name }}</p>
 
     <p>{{ post.body | linebreaks }}</p>
+
+    {% if user == post.author %}
+        <p>
+            <a href="{% url 'edit_post' post.pk %}">✏️ Edytuj</a> |
+            <a href="{% url 'delete_post' post.pk %}">🗑️ Usuń</a>
+        </p>
+    {% endif %}
+
     <h3>Leave a comment:</h3>
     <form method="post">
         {% csrf_token %}

@@ -9,4 +9,7 @@ urlpatterns = [
     path("category/<category>/", views.blog_category, name="blog_category"),
     path("ustawienia_konta/", views.account_settings, name='ustawienia_konta'),
     path("post/new/", views.create_post, name="create_post"),  # 👈 nowy URL
+    path("post/<int:pk>/edit/", views.edit_post, name="edit_post"),
+    path("post/<int:pk>/delete/", views.delete_post, name="delete_post"),
+
 ]
