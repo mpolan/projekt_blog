@@ -5,6 +5,8 @@
 
 {% if user.is_authenticated %}
 Witaj {{user.profile.display_name}} !
+<p><a href="{% url 'create_post' %}">➕ Dodaj nowy post</a></p>
+<hr>
 <a href = "{% url 'ustawienia_konta' %}"> Ustawienia Konta</a>
 <p><a href="{% url 'password_change' %}">Password Change</a></p>
 <form action="{% url 'logout' %}" method="post">
@@ -29,15 +31,14 @@ Witaj {{user.profile.display_name}} !
     {% block posts %}
         {% for post in posts %}
             <h3><a href="{% url 'blog_detail' post.pk %}">{{ post.title }}</a></h3>
+            <p><strong>Autor:</strong> {{ post.author.profile.display_name }}</p>
             <small>
                 {{ post.created_on.date }} | Categories:
                 {% for category in post.categories.all %}
-                    <a href="{% url 'blog_category' category.name %}">
-                        {{ category.name }}
-                    </a>
+                    <a href="{% url 'blog_category' category.name %}">{{ category.name }}</a>
                 {% endfor %}
             </small>
-            <p>{{ post.body | slice:":400" }}...</p>
+            <p>{{ post.body|slice:":400" }}...</p>
         {% endfor %}
     {% endblock posts %}
 {% endblock page_content %}

@@ -1,9 +1,12 @@
 # blog/views.py
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from blog.models import Post, Comment
 from blog.forms import CommentForm
+from django.contrib.auth.decorators import login_required
+from .forms import PostForm
+
 
 def blog_index(request):
     posts = Post.objects.all().order_by("-created_on")
@@ -47,3 +50,18 @@ def blog_detail(request, pk):
 
 def account_settings(request):
     return render(request, 'konto/account_settings.html')
+
+@login_required
+def create_post(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user  # 👈 przypisz autora
+            post.save()
+            form.save_m2m()  # zapisz relacje ManyToMany
+            return redirect("blog_index")
+    else:
+        form = PostForm()
+
+    return render(request, "blog/create_post.html", {"form": form})

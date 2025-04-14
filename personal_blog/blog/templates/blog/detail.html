@@ -14,6 +14,9 @@
             </a>
         {% endfor %}
     </small>
+
+    <p><strong>Autor:</strong> {{ post.author.profile.display_name|default:post.author.first_name }}</p>
+
     <p>{{ post.body | linebreaks }}</p>
     <h3>Leave a comment:</h3>
     <form method="post">
