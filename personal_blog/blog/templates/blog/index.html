@@ -1,27 +1,24 @@
 <!-- blog/templates/blog/index.html -->
 {% extends "base.html" %}
 
-{%block login_signup_content %}
-
+{% block login_signup_content %}
 {% if user.is_authenticated %}
-Witaj {{user.profile.display_name}} !
+Witaj {{ user.profile.display_name }}!
 <p><a href="{% url 'create_post' %}">➕ Dodaj nowy post</a></p>
 <hr>
-<a href = "{% url 'ustawienia_konta' %}"> Ustawienia Konta</a>
+<a href="{% url 'ustawienia_konta' %}">Ustawienia Konta</a>
 <p><a href="{% url 'password_change' %}">Password Change</a></p>
 <form action="{% url 'logout' %}" method="post">
     {% csrf_token %}
     <button type="submit">Log Out</button>
-  </form>
-
+</form>
 {% else %}
 <p><a href="{% url 'password_reset' %}">Password Reset</a></p>
-<p>Nie jestes zalogowany</p>
-<a href="{% url 'login' %}">Zaloguj Sie</a><br>
-<a href="{% url 'signup' %}">Zarejestruj Sie</a>
+<p>Nie jesteś zalogowany</p>
+<a href="{% url 'login' %}">Zaloguj się</a><br>
+<a href="{% url 'signup' %}">Zarejestruj się</a>
 {% endif %}
-
-{%endblock login_signup_content %}
+{% endblock login_signup_content %}
 
 {% block page_title %}
     <h2>Blog Posts</h2>
@@ -30,7 +27,11 @@ Witaj {{user.profile.display_name}} !
 {% block page_content %}
     {% block posts %}
         {% for post in posts %}
-            <h3><a href="{% url 'blog_detail' post.pk %}">{{ post.title }}</a></h3>
+            <h3>
+                <a href="{% url 'blog_detail' post.pk %}">{{ post.title }}</a>
+                {% if post.is_protected %} 🔒 {% endif %}
+            </h3>
+
             <p><strong>Autor:</strong> {{ post.author.profile.display_name }}</p>
             <small>
                 {{ post.created_on.date }} | Categories:
@@ -38,7 +39,12 @@ Witaj {{user.profile.display_name}} !
                     <a href="{% url 'blog_category' category.name %}">{{ category.name }}</a>
                 {% endfor %}
             </small>
-            <p>{{ post.body|slice:":400" }}...</p>
+
+            {% if post.is_protected %}
+                <p><em>Ten post jest zabezpieczony hasłem. Kliknij tytuł, aby go odblokować.</em></p>
+            {% else %}
+                <p>{{ post.body|slice:":400" }}...</p>
+            {% endif %}
         {% endfor %}
     {% endblock posts %}
 {% endblock page_content %}

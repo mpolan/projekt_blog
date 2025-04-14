@@ -20,4 +20,7 @@ class CommentForm(forms.Form):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ["title", "body", "categories"]  # author ustawimy w widoku
+        fields = ["title", "body", "categories", "visibility", "password"]  # 👈 dodane pola
+        widgets = {
+            "password": forms.PasswordInput(render_value=True, attrs={"placeholder": "Opcjonalne hasło"})
+        }

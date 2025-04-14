@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+VISIBILITY_CHOICES = (
+    ('public', 'Publiczny'),
+    ('private', 'Prywatny (chroniony hasłem)'),
+)
+
 class Category(models.Model):
     name = models.CharField(max_length=30)
 
@@ -17,6 +22,12 @@ class Post(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     categories = models.ManyToManyField("Category", related_name="posts")
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  # 👈 nowość
+
+    visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='public')
+    password = models.CharField(max_length=100, blank=True, null=True)
+
+    def is_protected(self):
+        return bool(self.password)
 
     def __str__(self):
         return self.title
