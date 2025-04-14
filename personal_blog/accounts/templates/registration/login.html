@@ -10,7 +10,13 @@
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Log In</button>
+
+  <label>
+    <input type="checkbox" name="remember_me">
+    Zapamiętaj mnie
+  </label>
+
+  <button type="submit">Zaloguj się</button>
 </form>
 
 {%endblock login_signup_content%}

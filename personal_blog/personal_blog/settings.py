@@ -130,3 +130,6 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+SESSION_COOKIE_AGE = 1209600  # 2 tygodnie
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # zezwala na dłuższą sesję
