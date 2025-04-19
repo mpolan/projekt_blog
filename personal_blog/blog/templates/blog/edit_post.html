@@ -8,6 +8,10 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    <label>Zdjęcia:</label>
+    <input type="file" name="images" multiple>
+    
     <button type="submit">Zapisz zmiany</button>
 </form>
+
 {% endblock %}

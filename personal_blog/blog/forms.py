@@ -1,7 +1,7 @@
 # blog/forms.py
 
 from django import forms
-from .models import Post
+from .models import Post, PostImage
 
 class CommentForm(forms.Form):
     author = forms.CharField(
@@ -28,4 +28,10 @@ class PostForm(forms.ModelForm):
             "visibility": "Widoczność",
             "password": "Hasło (opcjonalne)",
         }
+
+class PostImageForm(forms.ModelForm):
+    class Meta:
+        model = PostImage
+        fields = ['image']
+
 

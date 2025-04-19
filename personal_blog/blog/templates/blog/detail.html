@@ -19,7 +19,19 @@
     <img src="{{ post.author.profile.get_profile_picture_url }}" alt="avatar" width="40" height="40" style="border-radius: 50%;">
 
     <p>{{ post.body | linebreaks }}</p>
+    {% if post.images.all %}
+        <div class="carousel">
+            {% for image in post.images.all %}
+                <img src="{{ image.image.url }}" class="carousel-image {% if forloop.first %}active{% endif %}">
+            {% endfor %}
+            {% if post.images.count > 1 %}
+                <button type="button" class="prev">&#10094;</button>
+                <button type="button" class="next">&#10095;</button>
+            {% endif %}
+        </div>
+    {% endif %}
 
+    
     {% if user == post.author %}
         <p>
             <a href="{% url 'edit_post' post.pk %}">✏️ Edytuj</a> |
@@ -48,4 +60,63 @@
             {{ comment.body | linebreaks }}
         </p>
     {% endfor %}
+
+    <style>
+        .carousel {
+            position: relative;
+            max-width: 500px;
+            margin-top: 1em;
+        }
+        .carousel-image {
+            display: none;
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+        .carousel-image.active {
+            display: block;
+        }
+        .carousel button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            font-size: 24px;
+            padding: 5px 10px;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .carousel .prev {
+            left: 0;
+        }
+        .carousel .next {
+            right: 0;
+        }
+        </style>
+        
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = document.querySelectorAll(".carousel-image");
+            let index = 0;
+        
+            function showImage(i) {
+                images.forEach(img => img.classList.remove("active"));
+                images[i].classList.add("active");
+            }
+        
+            document.querySelector(".next").addEventListener("click", function () {
+                index = (index + 1) % images.length;
+                showImage(index);
+            });
+        
+            document.querySelector(".prev").addEventListener("click", function () {
+                index = (index - 1 + images.length) % images.length;
+                showImage(index);
+            });
+        });
+        </script>
+        
+
 {% endblock page_content %}

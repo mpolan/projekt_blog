@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from blog.models import Post, Comment
+from blog.models import Post, Comment, PostImage
 from blog.forms import CommentForm
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
@@ -92,28 +92,42 @@ def account_settings(request):
 def create_post(request):
     if request.method == "POST":
         form = PostForm(request.POST)
+        images = request.FILES.getlist("images")
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            form.save_m2m()
-            return redirect("blog_index")
+            form.save_m2m()  # poprawka: zapisz M2M zanim zrobisz redirect
+
+            for img in images:
+                PostImage.objects.create(post=post, image=img)
+
+            return redirect("blog_detail", pk=post.pk)
     else:
         form = PostForm()
     return render(request, "blog/create_post.html", {"form": form})
 
 
+
 @login_required
 def edit_post(request, pk):
     post = get_object_or_404(Post, pk=pk, author=request.user)
+
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
+        images = request.FILES.getlist("images")  # obsługa wielu plików
+
         if form.is_valid():
-            form.save()
+            post = form.save()
+            for img in images:
+                PostImage.objects.create(post=post, image=img)
+
             return redirect("blog_detail", pk=post.pk)
     else:
         form = PostForm(instance=post)
+
     return render(request, "blog/edit_post.html", {"form": form})
+
 
 
 @login_required
