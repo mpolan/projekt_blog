@@ -25,6 +25,14 @@ class Profile(models.Model):
             age -= 1
         return age
 
+    def get_profile_picture_url(self):
+        if self.profile_picture:
+            return self.profile_picture.url
+        if self.plec == "female":
+            return "/media/default_female.png"
+        return "/media/default_male.png"
+
+
     def __str__(self):
         return self.display_name or self.user.username
 

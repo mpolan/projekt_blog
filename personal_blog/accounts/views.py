@@ -40,8 +40,8 @@ def account_settings(request):
 def edit_profile(request):
     profile = request.user.profile
 
-    if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=profile)
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             return redirect('account_settings')

@@ -3,7 +3,7 @@
 
 {% block login_signup_content %}
 {% if user.is_authenticated %}
-Witaj {{ user.profile.display_name }}!
+Witaj {{ user.profile.display_name }}!<img src="{{ user.profile.get_profile_picture_url }}" alt="avatar" width="32" height="32" style="border-radius: 50%;">
 <p><a href="{% url 'create_post' %}">➕ Dodaj nowy post</a></p>
 <hr>
 <a href="{% url 'ustawienia_konta' %}">Ustawienia Konta</a>
@@ -33,6 +33,7 @@ Witaj {{ user.profile.display_name }}!
             </h3>
 
             <p><strong>Autor:</strong> {{ post.author.profile.display_name }}</p>
+            <img src="{{ post.author.profile.get_profile_picture_url }}" alt="avatar" width="40" height="40" style="border-radius: 50%;">
             <small>
                 {{ post.created_on.date }} | Categories:
                 {% for category in post.categories.all %}

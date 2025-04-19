@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block page_content %}
+    <img src="{{ user.profile.get_profile_picture_url }}" alt="Zdjęcie profilowe" width="100">
+
     <p><strong>Login:</strong> {{ user.username }}</p>
     <p><strong>Wyświetlana nazwa:</strong> {{ user.profile.display_name }}</p>
     <p><strong>Imię:</strong> {{ user.first_name }}</p>

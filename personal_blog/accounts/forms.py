@@ -67,6 +67,7 @@ class CustomUserCreationForm(UserCreationForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['display_name', 'date_of_birth', 'plec']
+        fields = ['display_name', 'date_of_birth', 'plec', 'profile_picture']
+
 
 
