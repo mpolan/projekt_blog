@@ -10,6 +10,12 @@
     <p><strong>Imię:</strong> {{ user.first_name }}</p>
     <p><strong>Nazwisko:</strong> {{ user.last_name }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Płeć:</strong>
+        {% if user.profile.plec == "male" %}Mężczyzna
+        {% elif user.profile.plec == "female" %}Kobieta
+        {% else %}Nieokreślona{% endif %}
+      </p>
+      
     <p><strong>Data urodzenia:</strong> {{ user.profile.date_of_birth }}</p>
 
     {% if user.profile.get_age %}

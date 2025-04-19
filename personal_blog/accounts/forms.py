@@ -25,6 +25,17 @@ class CustomUserCreationForm(UserCreationForm):
             elif dob > max_date:
                 self.add_error("date_of_birth", "Musisz mieć co najmniej 13 lat, by założyć konto.")
 
+    GENDER_CHOICES = [
+        ("male", "Mężczyzna"),
+        ("female", "Kobieta"),
+    ]
+
+    plec = forms.ChoiceField(
+        choices=GENDER_CHOICES,
+        required=True,
+        label="Płeć"
+    )
+
     class Meta:
         model = User
         fields = ("username", "first_name", "last_name", "email", "date_of_birth", "password1", "password2")
@@ -44,6 +55,7 @@ class CustomUserCreationForm(UserCreationForm):
             first = user.first_name.lower()[0] if user.first_name else ''
             last = user.last_name.lower() if user.last_name else ''
             profile.display_name = f"{first}.{last}"
+            profile.plec = self.cleaned_data["plec"]
             profile.date_of_birth = self.cleaned_data["date_of_birth"]
             profile.save()
 
@@ -55,5 +67,6 @@ class CustomUserCreationForm(UserCreationForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['display_name', 'date_of_birth']
+        fields = ['display_name', 'date_of_birth', 'plec']
+
 

@@ -5,8 +5,14 @@ from django.dispatch import receiver
 from datetime import date
 
 class Profile(models.Model):
+    GENDER_CHOICES = [
+        ("male", "Mężczyzna"),
+        ("female", "Kobieta"),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=100, blank=True)
+    plec = models.CharField(max_length=6, choices=GENDER_CHOICES, default='male')
     date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
