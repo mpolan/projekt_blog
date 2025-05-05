@@ -12,7 +12,7 @@ python -m venv nazwa_venv
 source nazwa_venv/bin/activate
 ```
 
-#### Windows (PowerShell):asd
+#### Windows (PowerShell):
 ```powershell
 python -m venv nazwa_venv
 .\nazwa_venv\Scripts\Activate.ps1
