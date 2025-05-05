@@ -11,7 +11,7 @@ Witaj {{ user.profile.display_name }}!<img src="{{ user.profile.get_profile_pict
 <form action="{% url 'logout' %}" method="post">
     {% csrf_token %}
     <button type="submit">Log Out</button>
-</form>
+  </form>  
 {% else %}
 <p><a href="{% url 'password_reset' %}">Password Reset</a></p>
 <p>Nie jesteś zalogowany</p>
