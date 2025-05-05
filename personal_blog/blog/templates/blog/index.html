@@ -5,18 +5,19 @@
 {% if user.is_authenticated %}
 Witaj {{ user.profile.display_name }}!<img src="{{ user.profile.get_profile_picture_url }}" alt="avatar" width="32" height="32" style="border-radius: 50%;">
 <p><a href="{% url 'create_post' %}">➕ Dodaj nowy post</a></p>
-<hr>
 <a href="{% url 'ustawienia_konta' %}">Ustawienia Konta</a>
 <p><a href="{% url 'password_change' %}">Password Change</a></p>
 <form action="{% url 'logout' %}" method="post">
     {% csrf_token %}
     <button type="submit">Log Out</button>
-  </form>  
+  </form>
+<hr>  
 {% else %}
 <p><a href="{% url 'password_reset' %}">Password Reset</a></p>
 <p>Nie jesteś zalogowany</p>
 <a href="{% url 'login' %}">Zaloguj się</a><br>
 <a href="{% url 'signup' %}">Zarejestruj się</a>
+<hr>
 {% endif %}
 {% endblock login_signup_content %}
 
@@ -31,7 +32,7 @@ Witaj {{ user.profile.display_name }}!<img src="{{ user.profile.get_profile_pict
     <input type="text" name="q" placeholder="Szukaj postów..." value="{{ request.GET.q }}">
     <button type="submit">Szukaj</button>
 </form>
-
+<br>
     {% block posts %}
         {% for post in posts %}
             <h3>
@@ -50,8 +51,10 @@ Witaj {{ user.profile.display_name }}!<img src="{{ user.profile.get_profile_pict
 
             {% if post.is_protected %}
                 <p><em>Ten post jest zabezpieczony hasłem. Kliknij tytuł, aby go odblokować.</em></p>
+                <br>
             {% else %}
                 <p>{{ post.body|slice:":400" }}...</p>
+                <br>
             {% endif %}
         {% endfor %}
     {% endblock posts %}
