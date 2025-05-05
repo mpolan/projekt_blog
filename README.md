@@ -22,7 +22,7 @@ python -m venv nazwa_venv
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 ```
-
+aaaaaaaa
 ---
 
 ### 2. Zainstaluj zależności i zaktualizuj `pip`
