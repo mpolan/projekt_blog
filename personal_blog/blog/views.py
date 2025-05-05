@@ -5,17 +5,21 @@ from blog.forms import CommentForm
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
 from django.db import models
+from django.db.models import Q
 
 def blog_index(request):
-    if request.user.is_authenticated:
-        posts = Post.objects.filter(
-            models.Q(visibility='public') | models.Q(author=request.user)
-        ).order_by("-created_on")
-    else:
-        posts = Post.objects.filter(visibility='public').order_by("-created_on")
+    query = request.GET.get("q")
+    posts = Post.objects.all()
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) |
+            Q(body__icontains=query)
+        ).distinct()
 
     context = {
-        "posts": posts,
+        "posts": posts.order_by("-created_on"),
+        "query": query,
     }
     return render(request, "blog/index.html", context)
 
@@ -86,7 +90,6 @@ def blog_detail(request, pk):
 
 def account_settings(request):
     return render(request, 'konto/account_settings.html')
-
 
 @login_required
 def create_post(request):
