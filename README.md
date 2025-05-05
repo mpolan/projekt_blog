@@ -50,3 +50,74 @@ python manage.py runserver
 
 > 🔐 **Login:** `admin`  
 > 🔐 **Hasło:** `admin`
+
+# 🔁 Jak sforkować repozytorium, wprowadzić zmiany i wysłać Pull Request
+
+## ✅ 1. Zrób **fork** repozytorium na GitHubie
+
+1. Wejdź na repozytorium oryginalne (np. `https://github.com/mpolan/projekt_blog`)
+2. Kliknij przycisk **Fork** (prawy górny róg)
+3. Wybierz swój profil – GitHub utworzy **Twoją kopię repozytorium**
+
+---
+
+## ✅ 2. Sklonuj swojego forka lokalnie
+
+```bash
+git clone https://github.com/TWOJA_NAZWA/projekt_blog.git
+cd projekt_blog
+```
+
+> 🔁 Zamień `TWOJA_NAZWA` na swoją nazwę użytkownika na GitHubie.
+
+---
+
+## ✅ 3. Utwórz nowy branch do zmian
+
+```bash
+git checkout -b dodaj-funkcje
+```
+
+---
+
+## ✅ 4. Wprowadź zmiany w kodzie
+
+Edytuj pliki, dodaj nowe funkcje, poprawki itp.
+
+---
+
+## ✅ 5. Zapisz zmiany (commit)
+
+```bash
+git add .
+git commit -m "Dodano wyszukiwanie postów"
+```
+
+---
+
+## ✅ 6. Wyślij zmiany do swojego repozytorium na GitHubie (push)
+
+```bash
+git push origin dodaj-funkcje
+```
+
+---
+
+## ✅ 7. Otwórz **Pull Request** (PR)
+
+1. Wejdź na swojego **forka** na GitHubie
+2. Zobaczysz przycisk **"Compare & pull request"**
+3. Kliknij, opisz co zrobiłeś, np.:
+   > Dodano funkcję wyszukiwania postów po tytule i treści.
+4. Kliknij **"Create Pull Request"**
+
+---
+
+## ✅ 8. Co dalej?
+
+- Właściciel oryginalnego repo otrzyma Twój Pull Request
+- Może go przejrzeć, skomentować i **zaakceptować (Merge)**
+
+---
+
+📌 Gotowe! Właśnie wysłałeś swój wkład do projektu Open Source 💪
