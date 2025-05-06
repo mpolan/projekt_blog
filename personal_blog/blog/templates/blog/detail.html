@@ -20,6 +20,7 @@
 
     <p>{{ post.body | linebreaks }}</p>
     {% if post.images.all %}
+    <div class="container">
         <div class="carousel">
             {% for image in post.images.all %}
                 <img src="{{ image.image.url }}" class="carousel-image {% if forloop.first %}active{% endif %}">
@@ -29,6 +30,7 @@
                 <button type="button" class="next">&#10095;</button>
             {% endif %}
         </div>
+    </div>
     {% endif %}
 
     
@@ -62,6 +64,15 @@
     {% endfor %}
 
     <style>
+        .container {
+            margin-left: auto;
+            margin-right: auto;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         .carousel {
             position: relative;
             max-width: 500px;
