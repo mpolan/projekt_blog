@@ -3,10 +3,32 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block login_signup_content %}
-<h2>Sign up</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Sign Up</button>
-</form>
-{%endblock login_signup_content%}
+  <body style="background: linear-gradient(to right, #f5f5dc, #e0f7fa); margin: 0;">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+      <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
+        <h2 class="text-center mb-4">Zarejestruj się</h2>
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex flex-column gap-3">
+            {% for field in form %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="d-block text-center">{{ field.label }}</label>
+                <div class="d-flex justify-content-center">
+                  {{ field }}
+                </div>
+                {% if field.errors %}
+                  <div class="text-danger text-center">
+                    {% for error in field.errors %}
+                      <p>{{ error }}</p>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <button type="submit" class="btn btn-primary w-100 mt-3">Zarejestruj się</button>
+        </form>
+      </div>
+    </div>
+  </body>
+{% endblock login_signup_content %}
