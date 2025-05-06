@@ -5,18 +5,23 @@
 {% block title%} Login {%endblock%}
 
 {%block login_signup_content%}
-
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-
-  <label>
-    <input type="checkbox" name="remember_me">
-    Zapamiętaj mnie
-  </label>
-
-  <button type="submit">Zaloguj się</button>
-</form>
+<body style="background-color:aquamarine; margin: 0;">
+  <div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center p-0">
+    <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
+      <h3 class="text-center mb-4">Zaloguj się</h3>
+      <form method="post" class="w-100">
+        {% csrf_token %}
+        <div class="d-flex flex-column gap-3">
+          {{ form.as_p }}
+        </div>
+        <div class="form-check mb-3">
+          <input type="checkbox" name="remember_me" class="form-check-input" id="remember_me">
+          <label class="form-check-label" for="remember_me">Zapamiętaj mnie</label>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Zaloguj się</button>
+      </form>
+    </div>
+  </div>
+</body>
 
 {%endblock login_signup_content%}
