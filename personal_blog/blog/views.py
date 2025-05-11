@@ -8,13 +8,14 @@ from django.db import models
 from django.db.models import Q
 
 def blog_index(request):
-    query = request.GET.get("q")
+    query = request.GET.get("q", "")
     posts = Post.objects.all()
 
     if query:
         posts = posts.filter(
             Q(title__icontains=query) |
-            Q(body__icontains=query)
+            Q(body__icontains=query) |
+            Q(author__profile__display_name__icontains=query)
         ).distinct()
 
     context = {

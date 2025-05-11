@@ -34,6 +34,14 @@
 </form>
 <br>
 
+{% if query %}
+    <p>Wyniki wyszukiwania dla: <strong>{{ query }}</strong></p>
+    {% if posts|length == 0 %}
+        <p><em>Brak postów spełniających kryteria wyszukiwania.</em></p>
+    {% endif %}
+    <hr>
+{% endif %}
+
     {% block posts %}
     <div class="container">
         {% for post in posts %}
