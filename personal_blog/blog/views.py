@@ -39,7 +39,13 @@ def serve_protected_image(request, filepath):
 
 def blog_index(request):
     query = request.GET.get("q", "")
-    posts = Post.objects.all()
+
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(
+            Q(visibility='public') | Q(author=request.user)
+        )
+    else:
+        posts = Post.objects.filter(visibility='public')
 
     if query:
         posts = posts.filter(
@@ -55,15 +61,25 @@ def blog_index(request):
     return render(request, "blog/index.html", context)
 
 
+
 def blog_category(request, category):
-    posts = Post.objects.filter(
-        categories__name__contains=category
-    ).order_by("-created_on")
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(
+            Q(categories__name__icontains=category),
+            Q(visibility='public') | Q(author=request.user)
+        ).order_by("-created_on")
+    else:
+        posts = Post.objects.filter(
+            categories__name__icontains=category,
+            visibility='public'
+        ).order_by("-created_on")
+
     context = {
         "category": category,
         "posts": posts,
     }
     return render(request, "blog/category.html", context)
+
 
 
 def blog_detail(request, pk):
