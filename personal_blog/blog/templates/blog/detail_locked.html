@@ -13,9 +13,7 @@
     }
 </style>
 
-<div class="blur-box">
-    <p>{{ post.body|linebreaks }}</p>
-</div>
+<!-- Nie pokazujemy treści zablokowanego posta -->
 
 <form method="post">
     {% csrf_token %}

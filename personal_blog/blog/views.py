@@ -7,6 +7,36 @@ from .forms import PostForm
 from django.db import models
 from django.db.models import Q
 
+from django.http import FileResponse, Http404
+from django.conf import settings
+from blog.models import PostImage
+import os
+
+def serve_protected_image(request, filepath):
+    try:
+        image = PostImage.objects.select_related("post").get(image=filepath)
+        post = image.post
+    except PostImage.DoesNotExist:
+        raise Http404("Obraz nie istnieje.")
+
+    # Sprawdzenie dostępu
+    if post.is_protected():
+        session_key = (
+            f"user_{request.user.id}_unlocked_post_{post.pk}"
+            if request.user.is_authenticated
+            else f"anon_unlocked_post_{post.pk}"
+        )
+        if not request.session.get(session_key) and request.user != post.author:
+            raise Http404("Brak dostępu do chronionego pliku.")
+
+    # Serwowanie pliku
+    full_path = os.path.join(settings.MEDIA_ROOT, filepath)
+    if os.path.exists(full_path):
+        return FileResponse(open(full_path, "rb"), content_type="image/png")
+    else:
+        raise Http404("Plik nie znaleziony.")
+
+
 def blog_index(request):
     query = request.GET.get("q", "")
     posts = Post.objects.all()
@@ -85,7 +115,13 @@ def blog_detail(request, pk):
         "comments": comments,
         "form": form,
     }
-    return render(request, "blog/detail.html", context)
+    return render(request, "blog/detail.html", {
+    "post": post,
+    "form": form,
+    "comments": comments,
+    "unlocked": True,  # ← DODAJ TO
+})
+
 
 
 
