@@ -8,6 +8,17 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
+    {% if post.images.all %}
+    <h4>Obecne zdjęcia:</h4>
+        {% for image in post.images.all %}
+            <div style="margin-bottom: 10px;">
+                <img src="{% url 'serve_protected_image' image.image.name %}" width="150">
+                <label>
+                    <input type="checkbox" name="delete_images" value="{{ image.id }}"> Usuń
+                </label>
+            </div>
+        {% endfor %}
+    {% endif %}
     <label>Zdjęcia:</label>
     <input type="file" name="images" multiple>
     
