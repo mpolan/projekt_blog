@@ -30,12 +30,17 @@
 
 <form method="get" action="{% url 'blog_index' %}">
     <input type="text" name="q" placeholder="Szukaj postów..." value="{{ request.GET.q }}">
-    <button type="submit">Szukaj</button>
+    
+    <label><input type="radio" name="filter" value="title" {% if request.GET.filter == "title" %}checked{% endif %}> Tytuł</label>
+    <label><input type="radio" name="filter" value="content" {% if request.GET.filter == "content" %}checked{% endif %}> Treść</label>
+    <label><input type="radio" name="filter" value="author" {% if request.GET.filter == "author" %}checked{% endif %}> Autor</label>
+
+    <button type="submit">Szukajjjj</button>
 </form>
 <br>
 
 {% if query %}
-    <p>Wyniki wyszukiwania dla: <strong>{{ query }}</strong></p>
+    <p>Wyniki wyszukiwania dla: <strong>{{ query }}</strong> w <strong>{{ request.GET.filter|default:"wszystko" }}</strong></p>
     {% if posts|length == 0 %}
         <p><em>Brak postów spełniających kryteria wyszukiwania.</em></p>
     {% endif %}

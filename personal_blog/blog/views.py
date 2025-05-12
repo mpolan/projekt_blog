@@ -8,21 +8,29 @@ from django.db import models
 from django.db.models import Q
 
 def blog_index(request):
-    query = request.GET.get("q", "")
+    query = request.GET.get('q')
+    filter_by = request.GET.get('filter')
     posts = Post.objects.all()
 
     if query:
-        posts = posts.filter(
-            Q(title__icontains=query) |
-            Q(body__icontains=query) |
-            Q(author__profile__display_name__icontains=query)
-        ).distinct()
+        if filter_by == 'title':
+            posts = posts.filter(title__icontains=query)
+        elif filter_by == 'content':
+            posts = posts.filter(content__icontains=query)
+        elif filter_by == 'author':
+            posts = posts.filter(author__username__icontains=query)
+        else:
+            # domyślnie: szukaj we wszystkich polach
+            posts = posts.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(author__username__icontains=query)
+            )
 
-    context = {
-        "posts": posts.order_by("-created_on"),
-        "query": query,
-    }
-    return render(request, "blog/index.html", context)
+    return render(request, 'blog/index.html', {
+        'posts': posts,
+        'query': query,
+    })
 
 
 def blog_category(request, category):
