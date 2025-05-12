@@ -6,8 +6,9 @@
 {% endblock page_title %}
 
 {% block page_content %}
+<div class="card shadow-sm p-4 mb-4">
     <small>
-        {{ post.created_on.date }} | Categories:
+        {{ post.created_on.date }} | Kategorie:
         {% for category in post.categories.all %}
             <a href="{% url 'blog_category' category.name %}">
                 {{ category.name }}
@@ -15,12 +16,15 @@
         {% endfor %}
     </small>
 
-    <p><strong>Autor:</strong> {{ post.author.profile.display_name|default:post.author.first_name }}</p>
-    <img src="{{ post.author.profile.get_profile_picture_url }}" alt="avatar" width="40" height="40" style="border-radius: 50%;">
+    <div class="d-flex align-items-center my-2">
+        <img src="{{ post.author.profile.get_profile_picture_url }}" alt="avatar" width="40" height="40" class="rounded-circle me-2">
+        <strong>{{ post.author.profile.display_name|default:post.author.first_name }}</strong>
+    </div>
 
     <p>{{ post.body | linebreaks }}</p>
+
     {% if post.images.all %}
-    <div class="container">
+    <div class="card shadow-sm p-4 mb-4">
         <div class="carousel">
             {% for image in post.images.all %}
                 <img src="{{ image.image.url }}" class="carousel-image {% if forloop.first %}active{% endif %}">
@@ -33,35 +37,43 @@
     </div>
     {% endif %}
 
-    
     {% if user == post.author %}
-        <p>
-            <a href="{% url 'edit_post' post.pk %}">✏️ Edytuj</a> |
-            <a href="{% url 'delete_post' post.pk %}">🗑️ Usuń</a>
+        <p class="mt-3">
+            <a href="{% url 'edit_post' post.pk %}" class="btn btn-outline-secondary btn-sm">✏️ Edytuj</a>
+            <a href="{% url 'delete_post' post.pk %}" class="btn btn-outline-danger btn-sm ms-2">🗑️ Usuń</a>
         </p>
     {% endif %}
 
-    <h3>Leave a comment:</h3>
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            {{ form.author }}
-        </div>
-        <div>
-            {{ form.body }}
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    <hr>
 
-    <h3>Comments:</h3>
+    <div class="card shadow-sm p-4 mb-4">
+        <h4 class="mb-3">📝 Dodaj komentarz</h4>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.author.label_tag }}
+                {{ form.author }}
+            </div>
+            <div class="mb-3">
+                {{ form.body.label_tag }}
+                {{ form.body }}
+            </div>
+            <button type="submit" class="btn btn-primary">💬 Wyślij</button>
+        </form>
+    </div>
+
+    <h3>Komentarze:</h3>
     {% for comment in comments %}
-        <p>
-            On {{ comment.created_on.date }} <b>{{ comment.author }}</b> wrote:
+    <div class="card shadow-sm p-3 mb-3">
+        <p class="mb-1">
+            <small> {{ comment.created_on.date }} <strong>{{ comment.author }}</strong> napisał:</small>
         </p>
-        <p>
-            {{ comment.body | linebreaks }}
-        </p>
+        <p class="mb-0">{{ comment.body | linebreaks }}</p>
+    </div>
+    {% empty %}
+    <p class="text-muted">Brak komentarzy — bądź pierwszą osobą, która skomentuje!</p>
     {% endfor %}
+</div>
 
     <style>
         .container {
