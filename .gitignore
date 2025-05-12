@@ -2,3 +2,4 @@
 /djangotutorial
 .gitignore
 **/__pycache__/
+.env
