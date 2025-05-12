@@ -15,24 +15,15 @@
       }
     </style>
 
-    <div class="blur-box mb-4">
-      <p>{{ post.body|linebreaks }}</p>
-    </div>
+<!-- Nie pokazujemy treści zablokowanego posta -->
 
-    <form method="post">
-      {% csrf_token %}
-      <p>🔒 Ten post jest chroniony. Podaj hasło, aby go odblokować:</p>
-
-      {% if error %}
-        <div class="text-danger mb-2">{{ error }}</div>
-      {% endif %}
-
-      <div class="mb-3">
-        <input type="password" name="password" class="form-control" placeholder="Hasło">
-      </div>
-
-      <button type="submit" class="btn btn-primary">🔓 Odblokuj</button>
-    </form>
-  </div>
-</div>
+<form method="post">
+    {% csrf_token %}
+    <p>Post jest chroniony. Podaj hasło, aby go odblokować:</p>
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+    <input type="password" name="password" placeholder="Hasło">
+    <button type="submit">🔓 Odblokuj</button>
+</form>
 {% endblock %}

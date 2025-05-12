@@ -23,18 +23,20 @@
 
     <p>{{ post.body | linebreaks }}</p>
 
-    {% if post.images.all %}
-    <div class="card shadow-sm p-4 mb-4">
-        <div class="carousel">
-            {% for image in post.images.all %}
-                <img src="{{ image.image.url }}" class="carousel-image {% if forloop.first %}active{% endif %}">
-            {% endfor %}
-            {% if post.images.count > 1 %}
-                <button type="button" class="prev">&#10094;</button>
-                <button type="button" class="next">&#10095;</button>
-            {% endif %}
+    {% if not post.is_protected or unlocked %}
+        {% if post.images.all %}
+        <div class="container">
+            <div class="carousel">
+                {% for image in post.images.all %}
+                    <img src="{% url 'serve_protected_image' image.image.name %}" class="carousel-image {% if forloop.first %}active{% endif %}">
+                {% endfor %}
+                {% if post.images.count > 1 %}
+                    <button type="button" class="prev">&#10094;</button>
+                    <button type="button" class="next">&#10095;</button>
+                {% endif %}
+            </div>
         </div>
-    </div>
+        {% endif %}
     {% endif %}
 
     {% if user == post.author %}

@@ -7,9 +7,45 @@ from .forms import PostForm
 from django.db import models
 from django.db.models import Q
 
+from django.http import FileResponse, Http404
+from django.conf import settings
+from blog.models import PostImage
+import os
+
+def serve_protected_image(request, filepath):
+    try:
+        image = PostImage.objects.select_related("post").get(image=filepath)
+        post = image.post
+    except PostImage.DoesNotExist:
+        raise Http404("Obraz nie istnieje.")
+
+    # Sprawdzenie dostępu
+    if post.is_protected():
+        session_key = (
+            f"user_{request.user.id}_unlocked_post_{post.pk}"
+            if request.user.is_authenticated
+            else f"anon_unlocked_post_{post.pk}"
+        )
+        if not request.session.get(session_key) and request.user != post.author:
+            raise Http404("Brak dostępu do chronionego pliku.")
+
+    # Serwowanie pliku
+    full_path = os.path.join(settings.MEDIA_ROOT, filepath)
+    if os.path.exists(full_path):
+        return FileResponse(open(full_path, "rb"), content_type="image/png")
+    else:
+        raise Http404("Plik nie znaleziony.")
+
+
 def blog_index(request):
     query = request.GET.get("q", "")
-    posts = Post.objects.all()
+
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(
+            Q(visibility='public') | Q(author=request.user)
+        )
+    else:
+        posts = Post.objects.filter(visibility='public')
 
     if query:
         posts = posts.filter(
@@ -25,15 +61,25 @@ def blog_index(request):
     return render(request, "blog/index.html", context)
 
 
+
 def blog_category(request, category):
-    posts = Post.objects.filter(
-        categories__name__contains=category
-    ).order_by("-created_on")
+    if request.user.is_authenticated:
+        posts = Post.objects.filter(
+            Q(categories__name__icontains=category),
+            Q(visibility='public') | Q(author=request.user)
+        ).order_by("-created_on")
+    else:
+        posts = Post.objects.filter(
+            categories__name__icontains=category,
+            visibility='public'
+        ).order_by("-created_on")
+
     context = {
         "category": category,
         "posts": posts,
     }
     return render(request, "blog/category.html", context)
+
 
 
 def blog_detail(request, pk):
@@ -85,7 +131,13 @@ def blog_detail(request, pk):
         "comments": comments,
         "form": form,
     }
-    return render(request, "blog/detail.html", context)
+    return render(request, "blog/detail.html", {
+    "post": post,
+    "form": form,
+    "comments": comments,
+    "unlocked": True,  # ← DODAJ TO
+})
+
 
 
 
@@ -123,14 +175,32 @@ def edit_post(request, pk):
 
         if form.is_valid():
             post = form.save()
+
+            # usuń zdjęcia
+            delete_ids = request.POST.getlist("delete_images")
+            if delete_ids:
+                for img_id in delete_ids:
+                    try:
+                        image = post.images.get(id=img_id)
+                        image.image.delete()
+                        image.delete()
+                    except PostImage.DoesNotExist:
+                        pass
+
+            # dodaj nowe zdjęcia
             for img in images:
                 PostImage.objects.create(post=post, image=img)
 
             return redirect("blog_detail", pk=post.pk)
+
     else:
         form = PostForm(instance=post)
 
-    return render(request, "blog/edit_post.html", {"form": form})
+    return render(request, "blog/edit_post.html", {
+    "form": form,
+    "post": post
+})
+
 
 
 
