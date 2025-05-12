@@ -121,3 +121,8 @@ git push origin dodaj-funkcje
 ---
 
 📌 Gotowe! Właśnie wysłałeś swój wkład do projektu Open Source 💪
+
+## GENERACJA KLUCZA:
+``` bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
