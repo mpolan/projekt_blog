@@ -1,14 +1,23 @@
 {% extends "base.html" %}
 
 {% block page_title %}
-<h2>Usuń post</h2>
+  <h2 class="text-center my-4">🗑️ Usuń post</h2>
 {% endblock %}
 
 {% block page_content %}
-<p>Czy na pewno chcesz usunąć post <strong>{{ post.title }}</strong>?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Tak, usuń</button>
-    <a href="{% url 'blog_detail' post.pk %}">Anuluj</a>
-</form>
+<div class="container">
+  <div class="card shadow-sm p-4 text-center">
+    <p>Czy na pewno chcesz usunąć post <strong>{{ post.title }}</strong>?</p>
+    <form method="post" class="d-inline">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Tak, usuń</button>
+    </form>
+    <a href="{% url 'blog_detail' post.pk %}" class="btn btn-secondary btn-sm ms-2">Anuluj</a>
+  </div>
+</div>
+<style>
+    .container{
+        width: 50%;
+    }
+</style>
 {% endblock %}
