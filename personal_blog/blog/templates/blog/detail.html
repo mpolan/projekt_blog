@@ -25,7 +25,7 @@
         <div class="container">
             <div class="carousel">
                 {% for image in post.images.all %}
-                    <img src="{% url 'serve_protected_image' image.image.name %}" class="carousel-image {% if forloop.first %}active{% endif %}">
+                    <img src="{{ image.image.url }}" class="carousel-image {% if forloop.first %}active{% endif %}">
                 {% endfor %}
                 {% if post.images.count > 1 %}
                     <button type="button" class="prev">&#10094;</button>

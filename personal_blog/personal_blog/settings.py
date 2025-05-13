@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import os
 from dotenv import load_dotenv
 load_dotenv()
+print("CLOUDINARY_URL =", os.getenv("CLOUDINARY_URL"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -43,7 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # "accounts",
     'accounts.apps.AccountsConfig',
+    'cloudinary',
+    'cloudinary_storage',
 ]
+import cloudinary
+cloudinary.config(cloudinary_url=os.getenv("CLOUDINARY_URL"))
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -145,3 +151,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # zezwala na dłuższą sesję
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+from django.core.files.storage import default_storage
+from cloudinary_storage.storage import MediaCloudinaryStorage
+
+# Wymuś globalnie MediaCloudinaryStorage (jeśli coś blokuje default)
+default_storage._wrapped = MediaCloudinaryStorage()
