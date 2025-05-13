@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 
 {% block page_title %}
-<h2>{{ post.title }}</h2>
+  <h2 class="text-center my-4">{{ post.title }}</h2>
 {% endblock %}
 
 {% block page_content %}
-<style>
-    .blur-box {
+<div class="container">
+  <div class="card shadow-sm p-4">
+    <style>
+      .blur-box {
         filter: blur(6px);
         pointer-events: none;
         user-select: none;
-    }
-</style>
+      }
+    </style>
 
 <!-- Nie pokazujemy treści zablokowanego posta -->
 
