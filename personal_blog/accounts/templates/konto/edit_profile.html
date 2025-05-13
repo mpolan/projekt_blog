@@ -9,7 +9,7 @@
 {% block page_content %}
 <div class="container d-flex justify-content-center align-items-center min-vh-10">
     <div class="card shadow-lg p-4 rounded-4 mt-4" style="max-width: 600px; margin: 0 auto;">
-      <form method="post">
+      <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
           {{ form.as_p }}
