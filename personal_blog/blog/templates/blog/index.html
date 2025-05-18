@@ -6,7 +6,7 @@
   <div class="d-flex justify-content-end align-items-center gap-3 mt-3">
     {% if user.is_authenticated %}
       <span class="fw-semibold">Witaj, {{ user.profile.display_name }}!</span>
-      <img src="{{ user.profile.get_profile_picture_url }}" alt="avatar" width="32" height="32" class="rounded-circle">
+      <img src="{{ user.profile.avatar_signed_url }}" alt="avatar" width="32" height="32" class="rounded-circle">
       <a href="{% url 'create_post' %}" class="btn btn-outline-primary btn-sm">➕ Nowy post</a>
       <a href="{% url 'ustawienia_konta' %}" class="btn btn-outline-secondary btn-sm">Ustawienia</a>
       <a href="{% url 'password_change' %}" class="btn btn-outline-secondary btn-sm">Hasło</a>
@@ -52,7 +52,7 @@
             <div class="card-body">
               <!-- Góra posta: avatar + autor -->
               <div class="d-flex align-items-center mb-3">
-                <img src="{{ post.author.profile.get_profile_picture_url }}" alt="avatar" width="40" height="40" class="rounded-circle me-2">
+                <img src="{{ post.author.profile.avatar_signed_url }}" alt="avatar" width="40" height="40" class="rounded-circle me-2">
                 <div>
                   <strong>{{ post.author.profile.display_name }}</strong><br>
                   <small class="text-muted">{{ post.created_on.date }}</small>

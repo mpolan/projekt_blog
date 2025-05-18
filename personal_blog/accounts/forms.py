@@ -62,12 +62,10 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 
-
-
+# 🔁 Zaktualizowana wersja
 class EditProfileForm(forms.ModelForm):
+    avatar = forms.ImageField(required=False, label="Nowy avatar")
+
     class Meta:
         model = Profile
-        fields = ['display_name', 'date_of_birth', 'plec', 'profile_picture']
-
-
-
+        fields = ['display_name', 'date_of_birth', 'plec']

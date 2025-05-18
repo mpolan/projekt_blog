@@ -21,7 +21,7 @@ class Post(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     categories = models.ManyToManyField("Category", related_name="posts")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  # 👈 nowość
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='public')
     password = models.CharField(max_length=100, blank=True, null=True)
@@ -40,8 +40,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.author} on '{self.post}'"
-    
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='post_images/')
+    image_url = models.CharField(max_length=255)  # zamiast ImageField

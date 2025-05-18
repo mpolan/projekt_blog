@@ -8,10 +8,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 
+from utils.supabase_storage import upload_profile_image
+
+
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     template_name = "registration/signup.html"
     success_url = reverse_lazy("login")
+
 
 def custom_login_view(request):
     if request.method == "POST":
@@ -20,11 +24,10 @@ def custom_login_view(request):
             user = form.get_user()
             login(request, user)
 
-            # 🔐 logika zapamiętania sesji
             if not request.POST.get("remember_me"):
-                request.session.set_expiry(0)  # Sesja wygasa po zamknięciu przeglądarki
+                request.session.set_expiry(0)
             else:
-                request.session.set_expiry(1209600)  # 2 tygodnie
+                request.session.set_expiry(1209600)
 
             return redirect("blog_index")
     else:
@@ -32,9 +35,11 @@ def custom_login_view(request):
 
     return render(request, "registration/login.html", {"form": form})
 
+
 @login_required
 def account_settings(request):
     return render(request, 'konto/account_settings.html')
+
 
 @login_required
 def edit_profile(request):
@@ -42,10 +47,22 @@ def edit_profile(request):
 
     if request.method == "POST":
         form = EditProfileForm(request.POST, request.FILES, instance=profile)
+        avatar_file = request.FILES.get("avatar")
+
         if form.is_valid():
-            form.save()
+            profile = form.save(commit=False)
+
+            if avatar_file:
+                filename = f"{request.user.id}/avatar.jpg"
+                if upload_profile_image(avatar_file, filename):
+                    profile.avatar_url = filename
+
+            profile.save()
             return redirect('account_settings')
     else:
         form = EditProfileForm(instance=profile)
 
-    return render(request, 'konto/edit_profile.html', {'form': form})
+    return render(request, 'konto/edit_profile.html', {
+        'form': form,
+        'profile': profile,
+    })

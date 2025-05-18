@@ -12,6 +12,9 @@ from django.conf import settings
 from blog.models import PostImage
 import os
 
+from utils.supabase_storage import upload_image_to_supabase
+
+
 def serve_protected_image(request, filepath):
     try:
         image = PostImage.objects.select_related("post").get(image=filepath)
@@ -153,10 +156,12 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            form.save_m2m()  # poprawka: zapisz M2M zanim zrobisz redirect
+            form.save_m2m()
 
             for img in images:
-                PostImage.objects.create(post=post, image=img)
+                filename = f"{request.user.id}/{img.name}"
+                if upload_image_to_supabase(img, filename):
+                    PostImage.objects.create(post=post, image_url=filename)
 
             return redirect("blog_detail", pk=post.pk)
     else:
@@ -171,36 +176,35 @@ def edit_post(request, pk):
 
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
-        images = request.FILES.getlist("images")  # obsługa wielu plików
+        images = request.FILES.getlist("images")
 
         if form.is_valid():
             post = form.save()
 
-            # usuń zdjęcia
+            # usuń stare zdjęcia
             delete_ids = request.POST.getlist("delete_images")
             if delete_ids:
                 for img_id in delete_ids:
                     try:
                         image = post.images.get(id=img_id)
-                        image.image.delete()
                         image.delete()
                     except PostImage.DoesNotExist:
                         pass
 
             # dodaj nowe zdjęcia
             for img in images:
-                PostImage.objects.create(post=post, image=img)
+                filename = f"{request.user.id}/{img.name}"
+                if upload_image_to_supabase(img, filename):
+                    PostImage.objects.create(post=post, image_url=filename)
 
             return redirect("blog_detail", pk=post.pk)
-
     else:
         form = PostForm(instance=post)
 
     return render(request, "blog/edit_post.html", {
-    "form": form,
-    "post": post
-})
-
+        "form": form,
+        "post": post
+    })
 
 
 

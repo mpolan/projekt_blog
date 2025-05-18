@@ -9,7 +9,7 @@
     <div class="card shadow-lg p-4 rounded-4 mt-4", style="max-width: 600px; margin: 0 auto;">
       <h4>Dane użytkownika</h4>
       <div class="list-group">
-        <img src="{{ user.profile.get_profile_picture_url }}" alt="Zdjęcie profilowe" width="100">
+        <img src="{{ user.profile.avatar_signed_url }}" alt="Zdjęcie profilowe" width="100">
         <p class="list-group-item" style="background-color: #cce5ff; border-radius: 8px;"><strong>Login:</strong> {{ user.username }}</p>
         <p class="list-group-item" style="background-color: #cce5ff; border-radius: 8px;"><strong>Wyświetlana nazwa:</strong> {{ user.profile.display_name }}</p>
         <p class="list-group-item" style="background-color: #cce5ff; border-radius: 8px;"><strong>Imię:</strong> {{ user.first_name }}</p>

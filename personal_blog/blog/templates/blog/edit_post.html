@@ -1,55 +1,52 @@
 {% extends "base.html" %}
+{% load signed_urls %}
 
 {% block page_title %}
   <h2 class="text-center my-4">✏️ Edytuj post</h2>
 {% endblock %}
 
 {% block page_content %}
-<form method="post" enctype="multipart/form-data">
+<div class="container">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    {% if post.images.all %}
-    <h4>Obecne zdjęcia:</h4>
-        {% for image in post.images.all %}
-            <div style="margin-bottom: 10px;">
-                <img src="{% url 'serve_protected_image' image.image.name %}" width="150">
-                <label>
-                    <input type="checkbox" name="delete_images" value="{{ image.id }}"> Usuń
-                </label>
-            </div>
-        {% endfor %}
-    {% endif %}
-    <label>Zdjęcia:</label>
-    <input type="file" name="images" multiple>
-    
-    <button type="submit">Zapisz zmiany</button>
-</form>
 
-      {% for field in form %}
-        <div class="mb-3">
-          <label class="form-label">{{ field.label_tag }}</label>
-          {{ field }}
-          {% if field.errors %}
-            <div class="text-danger small">{{ field.errors }}</div>
-          {% endif %}
+    {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label">{{ field.label_tag }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="text-danger small">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    {% if post.images.all %}
+      <h4>Obecne zdjęcia:</h4>
+      {% for image in post.images.all %}
+        <div style="margin-bottom: 10px;">
+          <img src="{{ image.image_url|signed_url }}" width="150">
+          <label>
+            <input type="checkbox" name="delete_images" value="{{ image.id }}"> Usuń
+          </label>
         </div>
       {% endfor %}
+    {% endif %}
 
-      <div class="mb-3">
-        <label class="form-label">Zdjęcia</label>
-        <input class="form-control" type="file" name="images" multiple>
-      </div>
+    <div class="mb-3">
+      <label class="form-label">Dodaj nowe zdjęcia</label>
+      <input class="form-control" type="file" name="images" multiple>
+    </div>
 
-      <button type="submit" class="btn btn-success">Zapisz zmiany</button>
-    </form>
-  </div>
+    <button type="submit" class="btn btn-success">Zapisz zmiany</button>
+  </form>
 </div>
+
 <style>
 body {
-    background-color: #f0f2f5;
+  background-color: #f0f2f5;
 }
 .card {
-    border-radius: 12px;
+  border-radius: 12px;
 }
 </style>
 {% endblock %}

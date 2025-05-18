@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import date
 
+from utils.supabase_storage import get_profile_image_url
+
 class Profile(models.Model):
     GENDER_CHOICES = [
         ("male", "Mężczyzna"),
@@ -14,7 +16,9 @@ class Profile(models.Model):
     display_name = models.CharField(max_length=100, blank=True)
     plec = models.CharField(max_length=6, choices=GENDER_CHOICES, default='male')
     date_of_birth = models.DateField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    
+    # zamiast ImageField – ścieżka do pliku w Supabase
+    avatar_url = models.CharField(max_length=255, blank=True, null=True)
 
     def get_age(self):
         if not self.date_of_birth:
@@ -25,16 +29,17 @@ class Profile(models.Model):
             age -= 1
         return age
 
-    def get_profile_picture_url(self):
-        if self.profile_picture:
-            return self.profile_picture.url
-        if self.plec == "female":
-            return "/media/default_female.png"
-        return "/media/default_male.png"
-
+    @property
+    def avatar_signed_url(self):
+        """Zwraca podpisany URL avatara (Supabase) lub domyślnego avatara"""
+        if self.avatar_url:
+            return get_profile_image_url(self.avatar_url)
+        default_path = "defaults/default_female.png" if self.plec == "female" else "defaults/default_male.png"
+        return get_profile_image_url(default_path)
 
     def __str__(self):
         return self.display_name or self.user.username
+
 
 # Tworzenie i uzupełnienie display_name automatycznie
 @receiver(post_save, sender=User)
@@ -46,4 +51,3 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
             instance.profile.save()
         except Profile.DoesNotExist:
             Profile.objects.create(user=instance)
-
