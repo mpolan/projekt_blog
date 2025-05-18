@@ -34,7 +34,7 @@ def upload_image_to_supabase(file: InMemoryUploadedFile, path: str) -> bool:
         print("❌ Upload failed:", e)
         return False
 
-def get_signed_image_url(path: str, expires_in: int = 300) -> str:
+def get_signed_image_url(path: str, expires_in: int = 60) -> str:
     """Generowanie podpisanego URL-a do zdjęcia posta"""
     try:
         res = supabase.storage.from_(BUCKET_POSTS).create_signed_url(path, expires_in)

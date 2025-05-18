@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import date
 
+import os
 from utils.supabase_storage import get_profile_image_url
 
 class Profile(models.Model):
@@ -29,16 +30,17 @@ class Profile(models.Model):
             age -= 1
         return age
 
-    @property
-    def avatar_signed_url(self):
-        """Zwraca podpisany URL avatara (Supabase) lub domyślnego avatara"""
-        if self.avatar_url:
-            return get_profile_image_url(self.avatar_url)
-        default_path = "defaults/default_female.png" if self.plec == "female" else "defaults/default_male.png"
-        return get_profile_image_url(default_path)
 
-    def __str__(self):
-        return self.display_name or self.user.username
+    @property
+    def avatar_url_final(self):
+        """Zwraca bezpośredni publiczny URL do avatara z Supabase"""
+        bucket = "profile-pics"
+        if self.avatar_url:
+            return f"{os.getenv('SUPABASE_URL')}/storage/v1/object/public/{bucket}/{self.avatar_url}"
+        
+        default_path = "defaults/default_female.png" if self.plec == "female" else "defaults/default_male.png"
+        return f"{os.getenv('SUPABASE_URL')}/storage/v1/object/public/{bucket}/{default_path}"
+
 
 
 # Tworzenie i uzupełnienie display_name automatycznie

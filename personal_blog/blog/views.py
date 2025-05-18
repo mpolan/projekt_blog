@@ -86,7 +86,15 @@ def blog_category(request, category):
 
 
 def blog_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(
+        Post.objects
+            .select_related("author__profile")
+            .prefetch_related("images", "comments")
+            .only("title", "body", "created_on", "author", "author__profile__display_name"),
+        pk=pk
+    )
+
+
     # Jeśli post jest prywatny i użytkownik to nie autor → błąd 403
     if post.visibility == 'private' and post.author != request.user:
         return render(request, "blog/private_forbidden.html", status=403)
