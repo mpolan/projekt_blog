@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 VISIBILITY_CHOICES = (
     ('public', 'Publiczny'),
     ('private', 'Tylko dla mnie'),
