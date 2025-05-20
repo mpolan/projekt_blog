@@ -223,3 +223,5 @@ def delete_post(request, pk):
         post.delete()
         return redirect("blog_index")
     return render(request, "blog/delete_post.html", {"post": post})
+
+

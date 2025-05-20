@@ -2,6 +2,8 @@
 
 from django.urls import path
 from . import views
+from blog.admin import blog_site
+
 
 urlpatterns = [
     path("", views.blog_index, name="blog_index"),
@@ -11,5 +13,5 @@ urlpatterns = [
     path("post/new/", views.create_post, name="create_post"),  # 👈 nowy URL
     path("post/<int:pk>/edit/", views.edit_post, name="edit_post"),
     path("post/<int:pk>/delete/", views.delete_post, name="delete_post"),
-
+    path("blogadmin/", blog_site.urls),
 ]
