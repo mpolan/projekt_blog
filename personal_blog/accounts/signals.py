@@ -21,5 +21,5 @@ User = get_user_model()
 @receiver(post_save, sender=User)
 def add_default_group(sender, instance, created, **kwargs):
     if created:
-        user_group = Group.objects.get(name='Użytkownik')
+        user_group = Group.objects.get(name='blogerzy')
         instance.groups.add(user_group)
