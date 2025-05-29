@@ -14,6 +14,7 @@ babel==2.17.0
 beautifulsoup4==4.13.4
 bleach==6.2.0
 CacheControl==0.14.3
+whitenoise>=6.0.0,<7.0.0
 cachetools==5.5.2
 certifi==2025.4.26
 cffi==1.17.1
