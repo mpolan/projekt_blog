@@ -3,30 +3,20 @@ Django settings for personal_blog project.
 """
 
 from pathlib import Path
-import psycopg2
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+import dj_database_url
 
+# Load .env variables
 load_dotenv()
-db_url = os.getenv("DATABASE_URL")
 
-try:
-    conn = psycopg2.connect(db_url)
-    cur = conn.cursor()
-    cur.execute("SELECT version();")
-    print("PostgreSQL version:", cur.fetchone())
-
-    cur.close()
-    conn.close()
-
-except Exception as e:
-    print("Connection failed:", e)
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
 ALLOWED_HOSTS = ['projektblog-production.up.railway.app', 'localhost', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://projektblog-production.up.railway.app']
 
@@ -72,9 +62,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'personal_blog.wsgi.application'
 
-# Database – PostgreSQL (Supabase)
-import dj_database_url
-
+# Database
 DATABASES = {
     'default': dj_database_url.config(conn_max_age=600)
 }
@@ -93,108 +81,70 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Media (tymczasowo lokalnie, potem Supabase Storage) i CKeditor
+# Media files (local, adjust if you move to cloud)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# CKEditor configuration
 customColorPalette = [
-      {
-          'color': 'hsl(4, 90%, 58%)',
-          'label': 'Red'
-      },
-      {
-          'color': 'hsl(340, 82%, 52%)',
-          'label': 'Pink'
-      },
-      {
-          'color': 'hsl(291, 64%, 42%)',
-          'label': 'Purple'
-      },
-      {
-          'color': 'hsl(262, 52%, 47%)',
-          'label': 'Deep Purple'
-      },
-      {
-          'color': 'hsl(231, 48%, 48%)',
-          'label': 'Indigo'
-      },
-      {
-          'color': 'hsl(207, 90%, 54%)',
-          'label': 'Blue'
-      },
-  ]
-CKEDITOR_5_CUSTOM_CSS = 'path_to.css' # optional
-CKEDITOR_5_FILE_STORAGE = "path_to_storage.CustomStorage" # optional
+    {'color': 'hsl(4, 90%, 58%)', 'label': 'Red'},
+    {'color': 'hsl(340, 82%, 52%)', 'label': 'Pink'},
+    {'color': 'hsl(291, 64%, 42%)', 'label': 'Purple'},
+    {'color': 'hsl(262, 52%, 47%)', 'label': 'Deep Purple'},
+    {'color': 'hsl(231, 48%, 48%)', 'label': 'Indigo'},
+    {'color': 'hsl(207, 90%, 54%)', 'label': 'Blue'},
+]
+
+CKEDITOR_5_CUSTOM_CSS = 'path_to.css'  # optional
+# CKEDITOR_5_FILE_STORAGE removed placeholder
 CKEDITOR_5_CONFIGS = {
-  'default': {
-      'toolbar': {
-          'items': ['heading', '|', 'bold', 'italic', 'link',
-                    'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
-                  }
-  },
-  'extends': {
-      'blockToolbar': [
-          'paragraph', 'heading1', 'heading2', 'heading3',
-          '|',
-          'bulletedList', 'numberedList',
-          '|',
-          'blockQuote',
-      ],
-      'toolbar': {
-          'items': ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
-                    'code','subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage',
-                  'bulletedList', 'numberedList', 'todoList', '|',  'blockQuote', 'imageUpload', '|',
-                  'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'mediaEmbed', 'removeFormat',
-                  'insertTable',
-                  ],
-          'shouldNotGroupWhenFull': 'true'
-      },
-      'image': {
-          'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft',
-                      'imageStyle:alignRight', 'imageStyle:alignCenter', 'imageStyle:side',  '|'],
-          'styles': [
-              'full',
-              'side',
-              'alignLeft',
-              'alignRight',
-              'alignCenter',
-          ]
-      },
-      'table': {
-          'contentToolbar': [ 'tableColumn', 'tableRow', 'mergeTableCells',
-          'tableProperties', 'tableCellProperties' ],
-          'tableProperties': {
-              'borderColors': customColorPalette,
-              'backgroundColors': customColorPalette
-          },
-          'tableCellProperties': {
-              'borderColors': customColorPalette,
-              'backgroundColors': customColorPalette
-          }
-      },
-      'heading' : {
-          'options': [
-              { 'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph' },
-              { 'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1' },
-              { 'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2' },
-              { 'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3' }
-          ]
-      }
-  },
-  'list': {
-      'properties': {
-          'styles': 'true',
-          'startIndex': 'true',
-          'reversed': 'true',
-      }
-  }
+    'default': {
+        'toolbar': {
+            'items': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'imageUpload'],
+        }
+    },
+    'extends': {
+        'blockToolbar': [
+            'paragraph', 'heading1', 'heading2', 'heading3',
+            '|',
+            'bulletedList', 'numberedList',
+            '|',
+            'blockQuote',
+        ],
+        'toolbar': {
+            'items': ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
+                      'code','subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage',
+                      'bulletedList', 'numberedList', 'todoList', '|',  'blockQuote', 'imageUpload', '|',
+                      'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'mediaEmbed', 'removeFormat',
+                      'insertTable'],
+            'shouldNotGroupWhenFull': 'true'
+        },
+        'image': {
+            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:alignRight', 'imageStyle:alignCenter', 'imageStyle:side'],
+            'styles': ['full', 'side', 'alignLeft', 'alignRight', 'alignCenter']
+        },
+        'table': {
+            'contentToolbar': ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'],
+            'tableProperties': {'borderColors': customColorPalette, 'backgroundColors': customColorPalette},
+            'tableCellProperties': {'borderColors': customColorPalette, 'backgroundColors': customColorPalette}
+        },
+        'heading': {
+            'options': [
+                {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
+                {'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1'},
+                {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
+                {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'}
+            ]
+        }
+    },
+    'list': {'properties': {'styles': 'true', 'startIndex': 'true', 'reversed': 'true'}}
 }
 
-# Define a constant in settings.py to specify file upload permissions
-CKEDITOR_5_FILE_UPLOAD_PERMISSION = "any"  # Possible values: "staff", "authenticated", "any"
+CKEDITOR_5_FILE_UPLOAD_PERMISSION = "any"
 
 # Primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -203,14 +153,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-# Email backend (dev)
+# Email backend (for development)
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Sessions
-SESSION_COOKIE_AGE = 1209600  # 2 tygodnie
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-# Optional: Supabase setup (media, później)
+# Optional: Supabase storage setup (for future)
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "post_images")
