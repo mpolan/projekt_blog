@@ -1,6 +1,7 @@
 <!--  blog/templates/blog/detail.html -->
 {% extends "base.html" %}
 {% load signed_urls %}
+{% load safe_html %}
 
 {% block page_title %}
     <h2>{{ post.title }}</h2>
@@ -22,7 +23,7 @@
         <strong>{{ post.author.profile.display_name|default:post.author.first_name }}</strong>
     </div>
 
-    <p>{{ post.body | linebreaks }}</p>
+    <p>{{ post.body|render_html | linebreaks }}</p>
 
     {% if not post.is_protected or unlocked %}
         {% if post.images.all %}

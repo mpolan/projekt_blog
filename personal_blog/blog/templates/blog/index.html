@@ -1,5 +1,6 @@
 <!-- blog/templates/blog/index.html -->
 {% extends "base.html" %}
+{% load safe_html %}
 
 {% block login_signup_content %}
 <div class="container">
@@ -80,7 +81,7 @@
               {% if post.is_protected %}
                 <p class="text-muted"><em>Ten post jest zabezpieczony hasłem. Kliknij tytuł, aby go odblokować.</em></p>
               {% else %}
-                <p>{{ post.body|slice:":400" }}...</p>
+                <p>{{ post.body|slice:":400"|render_html }}...</p>
               {% endif %}
             </div>
           </div>
