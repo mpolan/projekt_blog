@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.forms import DateInput
 from .models import Profile
 from datetime import date, timedelta
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -18,12 +21,14 @@ class CustomUserCreationForm(UserCreationForm):
 
         if dob:
             min_date = date(1900, 1, 1)
-            max_date = date.today() - timedelta(days=13*365)
+            max_date = date.today() - timedelta(days=13 * 365)
 
             if dob < min_date:
                 self.add_error("date_of_birth", "Data urodzenia nie może być wcześniejsza niż 1900 rok.")
+                logger.warning("Odrzucona rejestracja – zbyt stara data urodzenia: %s", dob)
             elif dob > max_date:
                 self.add_error("date_of_birth", "Musisz mieć co najmniej 13 lat, by założyć konto.")
+                logger.warning("Odrzucona rejestracja – użytkownik zbyt młody: %s", dob)
 
     GENDER_CHOICES = [
         ("male", "Mężczyzna"),
@@ -52,12 +57,16 @@ class CustomUserCreationForm(UserCreationForm):
                 profile = user.profile
             except Profile.DoesNotExist:
                 profile = Profile.objects.create(user=user)
+                logger.info("Utworzono nowy profil dla użytkownika: %s", user.username)
+
             first = user.first_name.lower()[0] if user.first_name else ''
             last = user.last_name.lower() if user.last_name else ''
             profile.display_name = f"{first}.{last}"
             profile.plec = self.cleaned_data["plec"]
             profile.date_of_birth = self.cleaned_data["date_of_birth"]
             profile.save()
+
+            logger.info("Zarejestrowano nowego użytkownika: %s (%s)", user.username, profile.display_name)
 
         return user
 

@@ -1,5 +1,9 @@
 from django import forms
 from .models import Post
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class CommentForm(forms.Form):
     author = forms.CharField(
@@ -14,6 +18,12 @@ class CommentForm(forms.Form):
         )
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        logger.info("Nowy komentarz od autora: %s", cleaned_data.get("author"))
+        return cleaned_data
+
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -26,4 +36,10 @@ class PostForm(forms.ModelForm):
             "password": "Hasło (opcjonalne)",
         }
 
-# PostImageForm już niepotrzebny
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+            self.save_m2m()
+            logger.info("Zapisano post: %s (ID=%s)", instance.title, instance.pk)
+        return instance

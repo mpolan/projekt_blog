@@ -17,8 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['projektblog-production.up.railway.app', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://projektblog-production.up.railway.app']
+ALLOWED_HOSTS = ['13.60.193.225', 'localhost', '127.0.0.1']                                                             
+CSRF_TRUSTED_ORIGINS = ['http://13.60.193.225']   
 
 # Application definition
 INSTALLED_APPS = [
@@ -166,3 +166,23 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "post_images")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "app.log",
+        },
+    },
+    "root": {
+        "handlers": ["console", "file"],
+        "level": "INFO",
+    },
+}
+
