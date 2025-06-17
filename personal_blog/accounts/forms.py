@@ -71,7 +71,7 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 
-# 🔁 Zaktualizowana wersja
+# Zaktualizowana wersja
 class EditProfileForm(forms.ModelForm):
     avatar = forms.ImageField(required=False, label="Nowy avatar")
 

@@ -14,7 +14,7 @@ BUCKET_PROFILES = os.getenv("SUPABASE_BUCKET_PROFILES", "profile-pics")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 # -------------------------
-# 📸 ZDJĘCIA POSTÓW
+#  ZDJĘCIA POSTÓW
 # -------------------------
 
 def upload_image_to_supabase(file: InMemoryUploadedFile, path: str) -> bool:
@@ -44,7 +44,7 @@ def get_signed_image_url(path: str, expires_in: int = 60) -> str:
         return ""
 
 # -------------------------
-# 👤 ZDJĘCIA PROFILOWE
+#  ZDJĘCIA PROFILOWE
 # -------------------------
 
 def upload_profile_image(file: InMemoryUploadedFile, path: str) -> bool:
